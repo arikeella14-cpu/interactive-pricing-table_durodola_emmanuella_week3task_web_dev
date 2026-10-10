@@ -1,0 +1,565 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing Plans</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #1e293b;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .pricing-container {
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        .heading {
+            text-align: center;
+            margin-bottom: 45px;
+        }
+
+        .heading h1 {
+            font-size: 36px;
+            margin-bottom: 12px;
+        }
+
+        .heading p {
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        /* Three-card layout */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 24px;
+            align-items: stretch;
+        }
+
+        /* Individual pricing card */
+        .pricing-card {
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            border-radius: 18px;
+            padding: 28px 24px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            cursor: pointer;
+            transition: border-color 0.25s, transform 0.25s;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .pricing-card.selected {
+            border-color: #6366f1;
+            box-shadow: 0 12px 30px rgba(99, 102, 241, 0.12);
+        }
+
+        /* Popular plan */
+        .popular-badge {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #6366f1;
+            color: #ffffff;
+            padding: 7px 15px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: bold;
+            white-space: nowrap;
+            letter-spacing: 0.5px;
+        }
+
+        /* Aligned card header */
+        .card-header {
+            min-height: 105px;
+        }
+
+        .card-header h2 {
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+
+        .card-header p {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Aligned prices */
+        .price {
+            min-height: 85px;
+            display: flex;
+            align-items: baseline;
+            gap: 5px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 20px;
+            margin-bottom: 22px;
+        }
+
+        .price strong {
+            font-size: 36px;
+            letter-spacing: -1px;
+        }
+
+        .price span {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .features-heading {
+            color: #64748b;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 18px;
+        }
+
+        /* Flexible feature list */
+        .features {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            flex: 1;
+            margin-bottom: 28px;
+        }
+
+        .features li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .check {
+            color: #6366f1;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        /* Action buttons stay aligned */
+        .select-btn {
+            width: 100%;
+            min-height: 48px;
+            margin-top: auto;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            background: #ffffff;
+            color: #1e293b;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .select-btn:hover {
+            border-color: #6366f1;
+        }
+
+        .pricing-card.selected .select-btn {
+            background: #6366f1;
+            color: #ffffff;
+            border-color: #6366f1;
+        }
+
+        .select-btn:focus-visible {
+            outline: 3px solid #a5b4fc;
+            outline-offset: 3px;
+        }
+
+        /* Selection status */
+        .selection-status {
+            margin-top: 30px;
+            padding: 18px 22px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .selection-status p {
+            color: #64748b;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        .selection-status strong {
+            font-size: 16px;
+        }
+
+        .reset-btn {
+            padding: 10px 14px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: #ffffff;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .reset-btn:hover {
+            background: #f1f5f9;
+        }
+
+        .note {
+            text-align: center;
+            margin-top: 18px;
+            font-size: 12px;
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 800px) {
+            .pricing-grid {
+                grid-template-columns: 1fr;
+                gap: 28px;
+                max-width: 480px;
+                margin: auto;
+            }
+
+            .card-header {
+                min-height: auto;
+                margin-bottom: 18px;
+            }
+
+            .price {
+                min-height: 70px;
+            }
+
+            .heading h1 {
+                font-size: 29px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="pricing-container">
+
+        <header class="heading">
+            <h1>Choose Your Plan</h1>
+            <p>
+                Simple, transparent pricing for every stage
+                of your journey.
+            </p>
+        </header>
+
+        <section class="pricing-grid"
+                 aria-label="Available pricing plans">
+
+            <!-- STARTER PLAN -->
+            <article class="pricing-card"
+                     data-plan="Starter"
+                     tabindex="0"
+                     role="radio"
+                     aria-checked="false">
+
+                <div class="card-header">
+                    <h2>Starter</h2>
+                    <p>
+                        Everything you need to get started
+                        with your first project.
+                    </p>
+                </div>
+
+                <div class="price">
+                    <strong>$0</strong>
+                    <span>/ forever</span>
+                </div>
+
+                <h3 class="features-heading">
+                    What's included
+                </h3>
+
+                <ul class="features">
+                    <li>
+                        <span class="check">✓</span>
+                        <span>1 personal project</span>
+                    </li>
+                    <li>
+                        <span class="check">✓</span>
+                        <span>Basic analytics dashboard</span>
+                    </li>
+                    <li>
+                        <span class="check">✓</span>
+                        <span>Community support</span>
+                    </li>
+                    <li>
+                        <span class="check">✓</span>
+                        <span>Standard templates</span>
+                    </li>
+                </ul>
+
+                <button class="select-btn" type="button">
+                    Choose Starter
+                </button>
+            </article>
+
+
+            <!-- PRO PLAN -->
+            <article class="pricing-card popular selected"
+                     data-plan="Pro"
+                     tabindex="0"
+                     role="radio"
+                     aria-checked="true">
+
+                <span class="popular-badge">
+                    MOST POPULAR
+                </span>
+
+                <div class="card-header">
+                    <h2>Pro</h2>
+                    <p>
+                        Advanced features for growing projects
+                        and ambitious creators.
+                    </p>
+                </div>
+
+                <div class="price">
+                    <strong>$19</strong>
+                    <span>/ month</span>
+                </div>
+
+                <h3 class="features-heading">
+                    Everything in Starter, plus
+                </h3>
+
+                <ul class="features">
+                    <li>
+                        <span class="check">✓</span>
+                        <span>Unlimited personal projects</span>
+                    </li>
+                    <li>
+                        <span class="check">✓</span>
+                        <span>Advanced analytics and reporting</span>
+                    </li>
+                    <li>
+                        <span class="check">✓</span>
+                        <span>Priority email support</span>
+                    </li>
+                    <li>
+                        <span class="check">✓</span>
+                        <span>Premium templates and custom themes</span>
+                    </li>
+                    <li>
+                        <span class="check">✓</span>
+                        <span>Team collaboration for up to 5 members</span>
+                    </li>
+                </ul>
+
+                <button class="select-btn" type="button">
+                    Selected ✓
+                </button>
+            </article>
+
+
+            <!-- BUSINESS PLAN -->
+            <article class="pricing-card"
+                     data-plan="Business"
+                     tabindex="0"
+                     role="radio"
+                     aria-checked="false">
+
+                <div class="card-header">
+                    <h2>Business</h2>
+                    <p>
+                        Powerful tools and flexible controls
+                        for teams ready to scale.
+                    </p>
+                </div>
+
+                <div class="price">
+                    <strong>$49</strong>
+                    <span>/ month</span>
+                </div>
+
+                <h3 class="features-heading">
+                    Everything in Pro, plus
+                </h3>
+
+                <ul class="features">
+                    <li>
+                        <span class="check">✓</span>
+                        <span>Unlimited team members and projects</span>
+                    </li>
+                    <li>
+                        <span class="check">✓</span>
+                        <span>Custom reports and data exports</span>
+                    </li>
+                    <li>
+                        <span class="check">✓</span>
+                        <span>Dedicated account support</span>
+                    </li>
+                    <li>
+                        <span class="check">✓</span>
+                        <span>Advanced permissions and security controls</span>
+                    </li>
+                    <li>
+                        <span class="check">✓</span>
+                        <span>Custom integrations and onboarding</span>
+                    </li>
+                    <li>
+                        <span class="check">✓</span>
+                        <span>Flexible team workflows</span>
+                    </li>
+                </ul>
+
+                <button class="select-btn" type="button">
+                    Choose Business
+                </button>
+            </article>
+
+        </section>
+
+        <!-- ACTIVE SELECTION DISPLAY -->
+        <section class="selection-status" aria-live="polite">
+            <div>
+                <p>YOUR SELECTED PLAN</p>
+                <strong id="selected-plan">
+                    Pro plan · $19/month
+                </strong>
+                <p id="selected-description"
+                   style="margin-top: 6px; margin-bottom: 0;">
+                    Great for growing teams.
+                </p>
+            </div>
+
+            <button class="reset-btn"
+                    id="reset-selection"
+                    type="button">
+                Reset selection
+            </button>
+        </section>
+
+        <p class="note">
+            Prices are illustrative. Selecting a plan does not
+            initiate a payment or subscription.
+        </p>
+
+    </main>
+
+    <script>
+        const cards = document.querySelectorAll(".pricing-card");
+
+        const selectedPlan = document.getElementById("selected-plan");
+        const selectedDescription =
+            document.getElementById("selected-description");
+
+        const resetButton =
+            document.getElementById("reset-selection");
+
+        const planDetails = {
+            Starter: {
+                price: "$0 forever",
+                description: "A simple place to start."
+            },
+
+            Pro: {
+                price: "$19/month",
+                description: "Great for growing teams."
+            },
+
+            Business: {
+                price: "$49/month",
+                description: "Built for teams ready to scale."
+            }
+        };
+
+        function selectPlan(card) {
+            const planName = card.dataset.plan;
+            const details = planDetails[planName];
+
+            // Update card selection
+            cards.forEach(function (item) {
+                const isSelected = item === card;
+
+                item.classList.toggle("selected", isSelected);
+
+                item.setAttribute(
+                    "aria-checked",
+                    String(isSelected)
+                );
+
+                const button = item.querySelector(".select-btn");
+
+                button.textContent = isSelected
+                    ? "Selected ✓"
+                    : "Choose " + item.dataset.plan;
+            });
+
+            // Update the selection information
+            selectedPlan.textContent =
+                planName + " plan · " + details.price;
+
+            selectedDescription.textContent =
+                details.description;
+        }
+
+        // Allow selection by clicking the card or its button
+        cards.forEach(function (card) {
+            card.addEventListener("click", function () {
+                selectPlan(card);
+            });
+
+            // Keyboard accessibility
+            card.addEventListener("keydown", function (event) {
+                if (
+                    event.target === card &&
+                    (event.key === "Enter" || event.key === " ")
+                ) {
+                    event.preventDefault();
+                    selectPlan(card);
+                }
+            });
+        });
+
+        // Reset to the default Pro plan
+        resetButton.addEventListener("click", function () {
+            const defaultPlan = document.querySelector(
+                '.pricing-card[data-plan="Pro"]'
+            );
+
+            selectPlan(defaultPlan);
+        });
+    </script>
+
+</body>
+</html>
+```
